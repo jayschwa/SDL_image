@@ -30,7 +30,7 @@
    Buffer overflow fix in RLE decompression by David Raulo in January 2008.
 */
 
-#include "SDL_endian.h"
+#include "SDL2/SDL_endian.h"
 #include "SDL_image.h"
 
 #ifdef LOAD_LBM

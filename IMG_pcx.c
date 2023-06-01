@@ -33,7 +33,7 @@
  *  4-plane 32bpp format with a fourth "intensity" plane
  */
 
-#include "SDL_endian.h"
+#include "SDL2/SDL_endian.h"
 
 #include "SDL_image.h"
 

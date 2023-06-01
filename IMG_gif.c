@@ -44,7 +44,7 @@
    Use SDL_Surface rather than xpaint Image structure
    Define SDL versions of RWSetMsg(), ImageNewCmap() and ImageSetCmap()
 */
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 #define Image           SDL_Surface
 #define RWSetMsg        IMG_SetError
