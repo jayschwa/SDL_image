@@ -10,7 +10,10 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    lib.addCSourceFiles(&generic_src_files, &.{});
+    if (@hasDecl(std.Build.LibExeObjStep, "AddCSourceFilesOptions"))
+        lib.addCSourceFiles(.{ .files = &generic_src_files })
+    else
+        lib.addCSourceFiles(&generic_src_files, &.{});
     for (supported_file_types) |file_type| lib.defineCMacro(file_type, null);
     lib.defineCMacro("USE_STBIMAGE", null);
     if (lib.target.isNativeOs() and lib.target.getOsTag() == .linux) {
@@ -48,7 +51,6 @@ const generic_src_files = [_][]const u8{
     "IMG_xcf.c",
     "IMG_xpm.c",
     "IMG_xv.c",
-    "IMG_xxx.c",
 };
 
 const supported_file_types = [_][]const u8{
