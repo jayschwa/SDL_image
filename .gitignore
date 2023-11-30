@@ -26,3 +26,6 @@ Release
 *.suo
 *.sdf
 *.opensdf
+
+/zig-cache
+/zig-out
