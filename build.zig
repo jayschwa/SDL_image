@@ -10,13 +10,10 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    if (@hasDecl(std.Build.LibExeObjStep, "AddCSourceFilesOptions"))
-        lib.addCSourceFiles(.{ .files = &generic_src_files })
-    else
-        lib.addCSourceFiles(&generic_src_files, &.{});
+    lib.addCSourceFiles(.{ .files = &generic_src_files });
     for (supported_file_types) |file_type| lib.defineCMacro(file_type, null);
     lib.defineCMacro("USE_STBIMAGE", null);
-    if (lib.target.isNativeOs() and lib.target.getOsTag() == .linux) {
+    if (target.query.isNativeOs() and target.result.os.tag == .linux) {
         // The SDL package doesn't work for Linux yet, so we rely on system packages for now.
         lib.linkSystemLibrary("SDL2");
     } else {
