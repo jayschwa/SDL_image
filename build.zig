@@ -13,16 +13,11 @@ pub fn build(b: *std.Build) void {
     lib.addCSourceFiles(.{ .files = &generic_src_files });
     for (supported_file_types) |file_type| lib.defineCMacro(file_type, null);
     lib.defineCMacro("USE_STBIMAGE", null);
-    if (target.query.isNativeOs() and target.result.os.tag == .linux) {
-        // The SDL package doesn't work for Linux yet, so we rely on system packages for now.
-        lib.linkSystemLibrary("SDL2");
-    } else {
-        const sdl = b.dependency("sdl", .{
-            .target = target,
-            .optimize = optimize,
-        });
-        lib.linkLibrary(sdl.artifact("SDL2"));
-    }
+    const sdl = b.dependency("sdl", .{
+        .target = target,
+        .optimize = optimize,
+    });
+    lib.linkLibrary(sdl.artifact("SDL2"));
     lib.installHeader("SDL_image.h", "SDL2/SDL_image.h");
     b.installArtifact(lib);
 }
