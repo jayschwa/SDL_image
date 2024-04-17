@@ -3,8 +3,8 @@
     .version = "2.6.3",
     .dependencies = .{
         .sdl = .{
-            .url = "https://github.com/andrewrk/SDL/archive/db4a162db2f6f59f737d03f441455dc9524d5793.tar.gz",
-            .hash = "1220c5360c9c71c215baa41b46ec18d0711059b48416a2b1cf96c7c2d87b2e8e4cf6",
+            .url = "https://github.com/jayschwa/SDL/archive/d602eaed698da8075561eadf8500e2020132d35a.tar.gz",
+            .hash = "12201990ac338db78888369a5d67ba311f673971a1b7638830be661df9f137882c8e",
         },
     },
     .paths = .{

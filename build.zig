@@ -18,7 +18,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     lib.linkLibrary(sdl.artifact("SDL2"));
-    lib.installHeader("SDL_image.h", "SDL2/SDL_image.h");
+    lib.installHeader(b.path("SDL_image.h"), "SDL2/SDL_image.h");
     b.installArtifact(lib);
 }
 
