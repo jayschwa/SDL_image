@@ -13,11 +13,14 @@ pub fn build(b: *std.Build) void {
     lib.addCSourceFiles(.{ .files = &generic_src_files });
     for (supported_file_types) |file_type| lib.defineCMacro(file_type, null);
     lib.defineCMacro("USE_STBIMAGE", null);
-    const sdl = b.dependency("sdl", .{
+    const sdl_dep = b.dependency("sdl", .{
         .target = target,
         .optimize = optimize,
     });
-    lib.linkLibrary(sdl.artifact("SDL2"));
+    const sdl = sdl_dep.artifact("SDL2");
+    lib.linkLibrary(sdl);
+    if (sdl.installed_headers_include_tree) |tree|
+        lib.addIncludePath(tree.getDirectory().path(b, "SDL2"));
     lib.installHeader(b.path("SDL_image.h"), "SDL2/SDL_image.h");
     b.installArtifact(lib);
 }
