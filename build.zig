@@ -4,28 +4,41 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const upstream = b.dependency("sdl_image", .{});
+
     const lib = b.addStaticLibrary(.{
         .name = "SDL2_image",
         .target = target,
         .optimize = optimize,
     });
+    lib.linkLibC();
 
-    lib.addCSourceFiles(.{ .files = &generic_src_files });
-    for (supported_file_types) |file_type| lib.defineCMacro(file_type, null);
-    lib.defineCMacro("USE_STBIMAGE", null);
     const sdl_dep = b.dependency("sdl", .{
         .target = target,
         .optimize = optimize,
     });
-    const sdl = sdl_dep.artifact("SDL2");
-    lib.linkLibrary(sdl);
-    if (sdl.installed_headers_include_tree) |tree|
+    const sdl_lib = sdl_dep.artifact("SDL2");
+    lib.linkLibrary(sdl_lib);
+    if (sdl_lib.installed_headers_include_tree) |tree|
         lib.addIncludePath(tree.getDirectory().path(b, "SDL2"));
-    lib.installHeader(b.path("SDL_image.h"), "SDL2/SDL_image.h");
+
+    for (file_types) |file_type|
+        lib.defineCMacro(file_type, null);
+    lib.defineCMacro("USE_STBIMAGE", null);
+    lib.addIncludePath(upstream.path("include"));
+    lib.addIncludePath(upstream.path("src"));
+
+    lib.addCSourceFiles(.{
+        .root = upstream.path("src"),
+        .files = srcs,
+    });
+
+    lib.installHeader(upstream.path("include/SDL_image.h"), "SDL2/SDL_image.h");
+
     b.installArtifact(lib);
 }
 
-const generic_src_files = [_][]const u8{
+const srcs: []const []const u8 = &.{
     "IMG.c",
     "IMG_WIC.c",
     "IMG_avif.c",
@@ -48,7 +61,7 @@ const generic_src_files = [_][]const u8{
     "IMG_xv.c",
 };
 
-const supported_file_types = [_][]const u8{
+const file_types: []const []const u8 = &.{
     "LOAD_BMP",
     "LOAD_GIF",
     "LOAD_LBM",
