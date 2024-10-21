@@ -22,9 +22,41 @@ pub fn build(b: *std.Build) void {
     if (sdl_lib.installed_headers_include_tree) |tree|
         lib.addIncludePath(tree.getDirectory().path(b, "SDL2"));
 
-    for (file_types) |file_type|
-        lib.defineCMacro(file_type, null);
+    // Use stb_image for loading JPEG and PNG files. Native alternatives such as
+    // Windows Imaging Component and Apple's Image I/O framework are not yet
+    // supported by this build script.
     lib.defineCMacro("USE_STBIMAGE", null);
+
+    // The following are options for supported file formats. AVIF, JXL, TIFF,
+    // and WebP are not yet supported by this build script, as they require
+    // additional dependencies.
+    if (b.option(bool, "enable-bmp", "Support loading BMP images") orelse true)
+        lib.defineCMacro("LOAD_BMP", null);
+    if (b.option(bool, "enable-gif", "Support loading GIF images") orelse true)
+        lib.defineCMacro("LOAD_GIF", null);
+    if (b.option(bool, "enable-jpg", "Support loading JPEG images") orelse true)
+        lib.defineCMacro("LOAD_JPG", null);
+    if (b.option(bool, "enable-lbm", "Support loading LBM images") orelse true)
+        lib.defineCMacro("LOAD_LBM", null);
+    if (b.option(bool, "enable-pcx", "Support loading PCX images") orelse true)
+        lib.defineCMacro("LOAD_PCX", null);
+    if (b.option(bool, "enable-png", "Support loading PNG images") orelse true)
+        lib.defineCMacro("LOAD_PNG", null);
+    if (b.option(bool, "enable-pnm", "Support loading PNM images") orelse true)
+        lib.defineCMacro("LOAD_PNM", null);
+    if (b.option(bool, "enable-qoi", "Support loading QOI images") orelse true)
+        lib.defineCMacro("LOAD_QOI", null);
+    if (b.option(bool, "enable-svg", "Support loading SVG images") orelse true)
+        lib.defineCMacro("LOAD_SVG", null);
+    if (b.option(bool, "enable-tga", "Support loading TGA images") orelse true)
+        lib.defineCMacro("LOAD_TGA", null);
+    if (b.option(bool, "enable-xcf", "Support loading XCF images") orelse true)
+        lib.defineCMacro("LOAD_XCF", null);
+    if (b.option(bool, "enable-xpm", "Support loading XPM images") orelse true)
+        lib.defineCMacro("LOAD_XPM", null);
+    if (b.option(bool, "enable-xv", "Support loading XV images") orelse true)
+        lib.defineCMacro("LOAD_XV", null);
+
     lib.addIncludePath(upstream.path("include"));
     lib.addIncludePath(upstream.path("src"));
 
@@ -59,15 +91,4 @@ const srcs: []const []const u8 = &.{
     "IMG_xcf.c",
     "IMG_xpm.c",
     "IMG_xv.c",
-};
-
-const file_types: []const []const u8 = &.{
-    "LOAD_BMP",
-    "LOAD_GIF",
-    "LOAD_LBM",
-    "LOAD_PCX",
-    "LOAD_PNG",
-    "LOAD_SVG",
-    "LOAD_TGA",
-    "LOAD_QOI",
 };
