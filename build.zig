@@ -7,7 +7,7 @@ pub fn build(b: *std.Build) void {
     const upstream = b.dependency("sdl_image", .{});
 
     const lib = b.addStaticLibrary(.{
-        .name = "SDL2_image",
+        .name = "SDL3_image",
         .target = target,
         .optimize = optimize,
     });
@@ -17,9 +17,8 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    const sdl_lib = sdl_dep.artifact("SDL2");
+    const sdl_lib = sdl_dep.artifact("SDL3");
     lib.linkLibrary(sdl_lib);
-    lib.addIncludePath(sdl_lib.getEmittedIncludeTree().path(b, "SDL2"));
 
     // Use stb_image for loading JPEG and PNG files. Native alternatives such as
     // Windows Imaging Component and Apple's Image I/O framework are not yet
@@ -64,7 +63,7 @@ pub fn build(b: *std.Build) void {
         .files = srcs,
     });
 
-    lib.installHeader(upstream.path("include/SDL_image.h"), "SDL2/SDL_image.h");
+    lib.installHeadersDirectory(upstream.path("include"), "", .{});
 
     b.installArtifact(lib);
 }
